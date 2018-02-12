@@ -1,0 +1,12 @@
+{
+  "name": "cwp-21",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "latest",
+    "joi": "^13.1.2",
+    "sequelize": "^4.33.3",
+    "winston": "^2.4.0",
+    "bluebird": "latest",
+    "body-parser": "latest"
+  }
+}
