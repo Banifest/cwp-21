@@ -28,6 +28,7 @@ module.exports = class Service
         {
             offset: searchSetting.offset,
             order: [[searchSetting.sortField, searchSetting.sortOrder.toUpperCase()]],
+            raw: true
         }))
         .filter((item, i, arr) => // фильтрация по заданому диапозону в limit
             i >= searchSetting.limit.begin && i <= searchSetting.limit.end
@@ -39,7 +40,7 @@ module.exports = class Service
     {
         if (typeof id === 'number')
         {
-            return await this.model.findById(id)
+            return (await this.model.findById(id)).get({plain: true});
         }
         else
         {

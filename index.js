@@ -9,17 +9,24 @@ module.exports = db;
 
 async function main()
 {
-    db.sequelize.sync({force: false});
-    let a = new (require('./servises/Properties'))();
-    a.create({id: 1, heading: '123', price: 12, currency: 'EUR', location: '123'});
     const app = express();
+
+    db.sequelize.sync({force: false});
+
     app.use(bodyParser.urlencoded({extended: true}));
-    app.use(express.static('public'));
+
+    app.use('/api', require('./controlles/api')());
 
     app.listen(3000, () =>
     {
         console.log('Example app listening on port 3000!');
     });
-}
 
+    app.all('/*', (req, res, next) =>
+    {
+        console.log('123');
+    });
+
+   // console.log(app);
+}
 main();
