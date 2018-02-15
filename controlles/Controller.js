@@ -8,6 +8,7 @@ module.exports = class Controller
         this.service = service;
         this.readAll = this.readAll.bind(this);
         this.read = this.read.bind(this);
+        this.paramRead = this.paramRead.bind(this);
         this.create = this.create.bind(this);
         this.update = this.update.bind(this);
         this.delete = this.delete.bind(this);
@@ -16,6 +17,7 @@ module.exports = class Controller
         this.routers = {
             '/': [{ method: 'get', cb: this.readAll }],
             '/:id': [{ method: 'get', cb: this.read }],
+            '/paramRead': [{ method: 'post', cb: this.paramRead }],
             '/create': [{ method: 'post', cb: this.create }],
             '/update': [{ method: 'post', cb: this.update }],
             '/delete': [{ method: 'post', cb: this.delete }]
@@ -23,23 +25,27 @@ module.exports = class Controller
     }
     async readAll(req, res)
     {
-        res.json(this.service.readByOption(req.params));
+        res.json(await this.service.readAll());
     };
     async read(req, res)
     {
-        res.json(this.service.readById(req.params.id));
+        res.json(await this.service.readById(req.params.id));
+    };
+    async paramRead(req, res)
+    {
+        res.json(await this.service.readByOption(req.body));
     };
     async create(req, res)
     {
-        res.json(this.service.create(req.body));
+        res.json(await this.service.create(req.body));
     };
     async update(req, res)
     {
-        res.json(this.service.update(req.body));
+        res.json(await this.service.update(req.body));
     };
     async delete(req, res)
     {
-        res.json(this.service.delete(req.body));
+        res.json(await this.service.delete(req.body));
     };
     registerRouters()
     {

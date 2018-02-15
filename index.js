@@ -13,7 +13,7 @@ async function main()
 
     db.sequelize.sync({force: false});
 
-    app.use(bodyParser.urlencoded({extended: true}));
+    app.use(bodyParser.json());
 
     app.use('/api', require('./controlles/api')());
 

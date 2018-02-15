@@ -1,5 +1,6 @@
 const db = require('../index');
 const validators = require('./validators');
+const errors = require('../utils/errors');
 
 module.exports = class Service
 {
@@ -19,6 +20,10 @@ module.exports = class Service
         };
     };
 
+    async readAll()
+    {
+        return await this.model.findAll();
+    }
 
     async readByOption(searchSetting = this.searchSetting)
     {
@@ -31,20 +36,20 @@ module.exports = class Service
             raw: true
         }))
         .filter((item, i, arr) => // фильтрация по заданому диапозону в limit
-            i >= searchSetting.limit.begin && i <= searchSetting.limit.end
-            && ((i - searchSetting.limit.begin + 1) % countRaw === 0) // каждый шаг
+            i >= searchSetting.limit.begin - 1  && i <= searchSetting.limit.end - 1
+            && ((i - searchSetting.limit.begin + 2) % searchSetting.limit.step === 0) // каждый шаг
         );
     }
 
     async readById(id)
     {
-        if (typeof id === 'number')
+        if (!isNaN(id))
         {
-            return (await this.model.findById(id)).get({plain: true});
+            return await (await this.model.findById(Number(id))).get({plain: true});
         }
         else
         {
-            throw "not found by specify id";
+            throw errors.invalidId;
         }
     }
 
@@ -52,7 +57,7 @@ module.exports = class Service
     {
         if ((await validators.check(this.validatorName, data)).error)
         {
-            throw "not correct data value"
+            throw errors.wrongCredentials;
         }
         else
         {
@@ -64,7 +69,7 @@ module.exports = class Service
     {
         if ((this.validatorName.check(validators.check(this.validatorName, data))).error)
         {
-            throw "not correct data value"
+            throw errors.invalidId;
         }
         else
         {
