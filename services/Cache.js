@@ -1,8 +1,38 @@
 class CacheService
 {
-    async set(req, data) {}
-    async get(req) {}
-    async invalidate(req) {}
-}
+    constructor()
+    {
+        const LRU = require('lru-cache');
+        this.logger = require('../services/Logger');
+        this.options =
+        {
+            max: 50000,
+            maxAge: 30000
+        };
+        this.cache = LRU(this.options);
+    }
 
-module.exports = CacheService;
+    async set(req, data)
+    {
+        this.cache.set(req.originalUrl, data, 30000);
+    }
+
+    async get(req)
+    {
+        console.log(this.cache.dump());
+        let answ = await this.cache.get(req.originalUrl);
+        if (answ)
+        {
+            this.logger.info(`FROM CACHE ${answ}`);
+        }
+        return answ;
+    }
+
+    async invalidate(req)
+    {
+
+    }
+}
+const cache = new CacheService();
+
+module.exports = cache;

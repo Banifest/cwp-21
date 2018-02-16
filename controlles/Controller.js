@@ -6,6 +6,7 @@ module.exports = class Controller
     constructor(service)
     {
         this.service = service;
+        this.cache = require('../services/Cache');
         this.readAll = this.readAll.bind(this);
         this.read = this.read.bind(this);
         this.paramRead = this.paramRead.bind(this);
@@ -25,11 +26,15 @@ module.exports = class Controller
     }
     async readAll(req, res)
     {
-        res.json(await this.service.readAll());
+        let answ = await this.service.readAll();
+        this.cache.set(req, answ);
+        res.json(answ);
     };
     async read(req, res)
     {
-        res.json(await this.service.readById(req.params.id));
+        let answ = await this.service.readById(req.params.id);
+        this.cache.set(req, answ);
+        res.json(answ);
     };
     async paramRead(req, res)
     {

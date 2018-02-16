@@ -7,6 +7,7 @@ module.exports = () =>
     const officesController = require('./OfficesController')();
     const agentsController = require('./AgentsController')();
 
+    router.use(require('../global-contollers/cache'));
     router.use(require('../global-contollers/logger'));
     router.use('/properties', propertiesController);
     router.use('/offices', officesController);
