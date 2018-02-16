@@ -24,7 +24,7 @@ async function main()
 
     app.all('/*', (req, res, next) =>
     {
-        console.log('123');
+
     });
 
    // console.log(app);

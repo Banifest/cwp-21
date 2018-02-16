@@ -6,6 +6,7 @@ module.exports = class Service
 {
     constructor(model=null, validatorName=null)
     {
+        this.errors = require('../utils/errors');
         this.model = model;
         this.validatorName = validatorName;
         this.searchSetting = {
@@ -27,8 +28,6 @@ module.exports = class Service
 
     async readByOption(searchSetting = this.searchSetting)
     {
-        let countRaw = Math.trunc((searchSetting.limit.end - searchSetting.limit.begin + 1) // Колтчество строк выборки
-            / searchSetting.limit.step);
         return await (await this.model.findAll(
         {
             offset: searchSetting.offset,
@@ -43,13 +42,13 @@ module.exports = class Service
 
     async readById(id)
     {
-        if (!isNaN(id))
+        if (!isNaN(id) && (await this.model.findById(Number(id))) != null)
         {
             return await (await this.model.findById(Number(id))).get({plain: true});
         }
         else
         {
-            throw errors.invalidId;
+            throw this.errors.notFound;
         }
     }
 
@@ -57,7 +56,7 @@ module.exports = class Service
     {
         if ((await validators.check(this.validatorName, data)).error)
         {
-            throw errors.wrongCredentials;
+            throw this.errors.wrongCredentials;
         }
         else
         {
@@ -67,17 +66,18 @@ module.exports = class Service
 
     async updateById(id, data)
     {
-        if ((this.validatorName.check(validators.check(this.validatorName, data))).error)
+        if ((await validators.check(this.validatorName, data)).error)
         {
             throw errors.invalidId;
         }
         else
         {
-            return await this.model.update(data, {where: {id: id}});
+            await this.model.update(data, {where: {id: id}});
+            return this.readById(id);
         }
     }
 
-    async deleteById()
+    async deleteById(id)
     {
         return this.model.destroy({where: {id: id}});
     }

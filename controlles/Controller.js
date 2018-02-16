@@ -41,11 +41,13 @@ module.exports = class Controller
     };
     async update(req, res)
     {
-        res.json(await this.service.update(req.body));
+        let id = req.body.id;
+        delete req.body.id;
+        res.json(await this.service.updateById(id, req.body));
     };
     async delete(req, res)
     {
-        res.json(await this.service.delete(req.body));
+        res.json(await this.service.deleteById(req.body.id));
     };
     registerRouters()
     {

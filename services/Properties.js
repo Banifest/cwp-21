@@ -8,8 +8,8 @@ module.exports = class Properties extends require('./Service')
     }
     async bindAgent(id, agentId)
     {
-        let property = await db.properties.findById(id);
-        let agent = await db.agents.findById(agentId);
+        let property = (await db.properties.findById(id)).id;
+        let agent = (await db.agents.findById(agentId)).id;
         if(property && agent)
         {
             property.agentId = agentId;

@@ -8,15 +8,15 @@ module.exports = class Agents extends require('./Service')
     }
     async bindOffice(id, officeId)
     {
-        let agent = await db.agents.findById(id);
-        let office = await db.properties.findById(officeId);
+        let agent = (await db.agents.findById(id)).id;
+        let office = (await db.properties.findById(officeId)).id;
         if(office && agent)
         {
             agent.officeId = officeId;
         }
         else
         {
-            throw "can't bind office and agent";
+            throw this.errors.notFound;
         }
     }
 
