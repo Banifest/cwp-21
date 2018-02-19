@@ -8,7 +8,7 @@ module.exports = class Properties extends require('./Service')
     }
     async bindAgent(id, agentId)
     {
-        let property = (await db.properties.findById(id)).id;
+        let property = (await db.properties.findById(id));
         let agent = (await db.agents.findById(agentId)).id;
         if(property && agent)
         {
@@ -18,6 +18,8 @@ module.exports = class Properties extends require('./Service')
         {
             throw "can't bind property and agent";
         }
+        property.save();
+        return property;
     }
 
     async unbindAgent(id)
@@ -27,5 +29,7 @@ module.exports = class Properties extends require('./Service')
         {
             property.agentId = null;
         }
+        property.save();
+        return property;
     }
 };

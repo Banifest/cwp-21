@@ -79,6 +79,6 @@ module.exports = class Service
 
     async deleteById(id)
     {
-        return this.model.destroy({where: {id: id}});
+        return await this.model.destroy({where: {id: id}});
     }
 };
