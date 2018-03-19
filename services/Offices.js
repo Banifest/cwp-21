@@ -9,7 +9,7 @@ module.exports = class Offices extends require('./Service')
 
     async readProp(searchSetting = this.searchSetting)
     {
-        return await (await db.agent.findAll(
+        return await (await db.agents.findAll(
             {
                 offset: searchSetting.offset,
                 order: [[searchSetting.sortField, searchSetting.sortOrder.toUpperCase()]],

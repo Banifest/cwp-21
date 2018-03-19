@@ -1,7 +1,7 @@
 const config = require('./config.json');
 const express = require('express');
 const Sequelize = require('sequelize');
-const bodyParser = require("express");
+const bodyParser = require("body-parser");
 
 const db = require('./model')(Sequelize, config);
 
@@ -20,11 +20,6 @@ async function main()
     app.listen(3000, () =>
     {
         console.log('Example app listening on port 3000!');
-    });
-
-    app.all('/*', (req, res, next) =>
-    {
-
     });
 
    // console.log(app);
